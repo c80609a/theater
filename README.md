@@ -1,24 +1,33 @@
-# README
+# Preparing
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+```
+$ ruby -v  # ruby 2.3.3p222
+$ rails -v # Rails 5.2.0
+$ rails new theater -T -d postgresql --api
+$ cd theater
+$ echo ruby-2.3.3 > .ruby-version
+$ echo "/.idea" >> .gitignore
 
-Things you may want to cover:
+$ git add -A
+$ git commit -m "initial commit"
+$ git remote add origin git@github.com:c80609a/theater.git
+$ git push -u origin master
 
-* Ruby version
+$ sudo -u postgres psql
+> CREATE DATABASE theater;
 
-* System dependencies
+> CREATE ROLE theater_user;
+> ALTER USER theater_user WITH PASSWORD '12345678';
+> ALTER ROLE theater_user WITH LOGIN;
+> ALTER ROLE theater_user WITH CREATEDB;
+> GRANT ALL ON DATABASE theater TO theater_user;
 
-* Configuration
+> CREATE DATABASE theater_test;
+> GRANT ALL PRIVILEGES ON DATABASE theater_test TO theater_user;
+> ALTER DATABASE theater_test OWNER TO theater_user;
+> \q
+```
 
-* Database creation
+# FLOW
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+See git log.

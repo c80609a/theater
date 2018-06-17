@@ -1,5 +1,5 @@
 class ShowsController < ApplicationController
-
+  include CanSerializeShow
   before_action :set_show, :only => [:destroy]
 
   def index
@@ -7,8 +7,13 @@ class ShowsController < ApplicationController
   end
 
   def create
-    show = Show.create show_params
-    json_response show, :created
+    service = ::Services::Shows::CreateService.new
+    if service.perform(show_params)
+      json_response serialize_show(service.show), :created
+    else
+      json_response({messages: service.errors.translate}, :bad_request)
+    end
+
   end
 
   def destroy

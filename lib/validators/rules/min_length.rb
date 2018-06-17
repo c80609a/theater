@@ -2,6 +2,8 @@ module Validators
   module Rules
     class MinLength < Validators::Rule::Binary
 
+      REASON = 'too_short'.freeze
+
       def valid?
         return true if left.size >= right
         add_error
@@ -10,7 +12,7 @@ module Validators
 
 
       def reason
-        'too_short'
+        REASON
       end
 
 

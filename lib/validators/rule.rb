@@ -1,9 +1,10 @@
 module Validators
   class Rule
 
+    NOT_UNIQ  = 'not_uniq'.freeze
+
     # todo or drop
     # NOT_FOUND = 'not_found'.freeze
-    # NOT_UNIQ  = 'not_uniq'.freeze
     # INVALID   = 'invalid'.freeze
     # CONNECTION_ERROR = 'connection_error'.freeze
     # SYSTEM_ERROR     = 'system_error'.freeze

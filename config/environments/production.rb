@@ -82,4 +82,6 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  Dir[Rails.root.join('app/controllers/concerns/**/*.rb')].each { |f| require f }
 end

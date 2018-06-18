@@ -1,6 +1,6 @@
 RSpec.describe ::Validators::Shows::CreateForm do
 
-  before { @is_valid = subject.valid? }
+  before(:each) { @is_valid = subject.valid? }
 
   context 'В базе пока еще нет Спектаклей:' do
 
@@ -24,11 +24,11 @@ RSpec.describe ::Validators::Shows::CreateForm do
 
     context 'если параметры невалидные:' do
 
+      subject { ::Validators::Shows::CreateForm.new invalid_params }
+
       context 'если неправильный title:' do
 
         context 'слишком короткий:' do
-
-          subject { ::Validators::Shows::CreateForm.new invalid_params }
 
           let(:invalid_params) do
             { title: 'Ко', start_at: '2010-10-20', stop_at: '2010-11-20' }
@@ -53,8 +53,6 @@ RSpec.describe ::Validators::Shows::CreateForm do
         end
 
         context 'слишком длинный:' do
-
-          subject { ::Validators::Shows::CreateForm.new invalid_params }
 
           let(:invalid_params) do
             { title: 'Конёк-Горбунок' * 20, start_at: '2010-10-20', stop_at: '2010-11-20' }
@@ -100,19 +98,22 @@ RSpec.describe ::Validators::Shows::CreateForm do
 
       context 'если такой title уже есть в базе:' do
 
-        subject { ::Validators::Shows::CreateForm.new invalid_params }
-
         # предварительно положим в базу спектакль с таким же названием
-        before(:each) do
-          Show.create!({title: 'Конёк-Горбунок', start_at: '2222-10-22', stop_at: '2222-11-22'})
+        before(:context) do
+          Show.create!({ title: 'Конёк-Горбунок', start_at: '2222-10-22', stop_at: '2222-11-22' })
+        end
+
+        after(:context) do
+          Show.where({ title: 'Конёк-Горбунок', start_at: '2222-10-22', stop_at: '2222-11-22' }).destroy_all
         end
 
         let(:invalid_params) do
-          {title: 'Конёк-Горбунок', start_at: '2010-10-20', stop_at: '2010-11-20'}
+          { title: 'Конёк-Горбунок', start_at: '2010-10-20', stop_at: '2010-11-20' }
         end
 
+        subject { ::Validators::Shows::CreateForm.new invalid_params }
+
         it 'результат валидации должен быть false' do
-          byebug
           expect(@is_valid).to be false
         end
 
@@ -137,6 +138,10 @@ RSpec.describe ::Validators::Shows::CreateForm do
         # предварительно положим в базу Спектакль, который заведомо точно наслаивается
         before(:context) do
           Show.create!({ title: 'Сон в летнюю ночь', start_at: '2010-10-20', stop_at: '2010-11-20' })
+        end
+
+        after(:context) do
+          Show.where({ title: 'Сон в летнюю ночь', start_at: '2010-10-20', stop_at: '2010-11-20' }).destroy_all
         end
 
         let(:invalid_params) do
@@ -166,8 +171,12 @@ RSpec.describe ::Validators::Shows::CreateForm do
         subject { ::Validators::Shows::CreateForm.new invalid_params }
 
         # предварительно положим в базу Спектакль, который заведомо точно соприкасается
-        before(:each) do
+        before(:context) do
           Show.create!({ title: 'Ревизор', start_at: '2010-10-20', stop_at: '2010-11-20' })
+        end
+
+        after(:context) do
+          Show.where({ title: 'Ревизор', start_at: '2010-10-20', stop_at: '2010-11-20' }).destroy_all
         end
 
         let(:invalid_params) do

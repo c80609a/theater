@@ -77,8 +77,16 @@ RSpec.describe 'Shows API', :type => :request do
 
       context 'Если нет такого спектакля:' do
 
-        it 'должна вылететь ошибка ActiveRecord::RecordNotFound' do
-          expect { delete admin_show_path 444777 }.to raise_exception ActiveRecord::RecordNotFound
+        before { delete admin_show_path 444777 }
+
+        # it 'должна вылететь ошибка ActiveRecord::RecordNotFound' do
+        #   expect { delete admin_show_path 444777 }.to raise_exception ActiveRecord::RecordNotFound
+        # end
+
+        it 'придёт сообщение "Записи не существует."' do
+          message = JSON.parse(response.body)
+          # noinspection RubyStringKeysInHashInspection
+          expect(message).to eq ({ 'message' => 'Записи не существует.'})
         end
 
       end

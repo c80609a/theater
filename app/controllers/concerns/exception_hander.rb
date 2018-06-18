@@ -5,7 +5,7 @@ module ExceptionHandler
 
     rescue_from ActiveRecord::RecordInvalid, with: :_422
     rescue_from ActiveRecord::RecordNotFound do |e|
-      json_response({message: e.message}, :not_found)
+      json_response({message: I18n.t('system.errors.record_not_found')}, :not_found)
     end
 
   end
@@ -13,7 +13,7 @@ module ExceptionHandler
   private
 
   def _422(e)
-    json_response({message: e.message}, :unprocessable_entity)
+    json_response({message: I18n.t('system.errors.record_invalid')}, :unprocessable_entity)
   end
 
 end
